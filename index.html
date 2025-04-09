@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Accessories Locator</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: rgb(249, 250, 251);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgb(17, 24, 39);
+      text-align: center;
+    }
+
+    .logo-subtext {
+      font-size: 14px;
+      color: rgb(75, 85, 99);
+      text-align: center;
+    }
+
+    .header-content {
+      text-align: center;
+      flex: 1;
+    }
+
+    .header-title {
+      font-size: 30px;
+      color: rgb(17, 24, 39);
+      margin-top: 8px;
+    }
+
+    .search-container {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 1px solid rgb(209, 213, 219);
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: rgb(59, 130, 246);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .search-box::before {
+      content: "🔍";
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgb(156, 163, 175);
+      font-size: 18px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .controls h2 {
+      font-size: 20px;
+      color: rgb(31, 41, 55);
+    }
+
+    .add-button {
+      background-color: rgb(59, 130, 246);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .add-button:hover {
+      background-color: rgb(37, 99, 235);
+    }
+
+    .add-form {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 500px;
+      z-index: 1000;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .add-form.visible,
+    .overlay.visible {
+      display: block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-grid select,
+    .form-grid input {
+      padding: 8px;
+      border: 1px solid rgb(209, 213, 219);
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .cancel-button {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      color: rgb(75, 85, 99);
+      cursor: pointer;
+    }
+
+    .save-button {
+      background-color: rgb(34, 197, 94);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .save-button:hover {
+      background-color: rgb(22, 163, 74);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .category-section {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-header {
+      background-color: rgb(243, 244, 246);
+      padding: 16px;
+      border-bottom: 1px solid rgb(229, 231, 235);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .category-header:hover {
+      transform: scale(1.05);
+    }
+
+    .category-header-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .category-header h3 {
+      font-size: 18px;
+      color: rgb(31, 41, 55);
+      margin: 0;
+    }
+
+    .category-search {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .category-search.visible {
+      display: block;
+    }
+
+    .category-items {
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .category-items.visible {
+      display: flex;
+    }
+
+    .accessory-card {
+      background: white;
+      border: 1px solid rgb(229, 231, 235);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: transform 0.2s;
+    }
+
+    .accessory-card:hover {
+      transform: scale(1.05);
+    }
+
+    .accessory-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .accessory-details h4 {
+      color: rgb(31, 41, 55);
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .accessory-location {
+      color: rgb(75, 85, 99);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .accessory-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .delete-button {
+      color: rgb(239, 68, 68);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+
+    .delete-button:hover {
+      color: rgb(220, 38, 38);
+    }
+
+    .empty-category {
+      text-align: center;
+      color: rgb(107, 114, 128);
+      padding: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .accessory-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-content {
+        text-align: center;
+        width: 100%;
+      }
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-text">Md Mobiles</span>
+        <span class="logo-subtext">since 2008</span>
+      </div>
+      <div class="header-content">
+        <h1 class="header-title">Mobile Accessories Locator</h1>
+      </div>
+    </header>
+
+    <!-- Global Search Container -->
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="globalSearch" placeholder="Search accessories (e.g., case, screen, cable, earphone)..." />
+      </div>
+    </div>
+
+    <!-- Controls and Add Button -->
+    <div class="controls">
+      <h2>Accessories List</h2>
+      <button class="add-button" onclick="toggleAddForm()">Add New Item</button>
+    </div>
+
+    <!-- Overlay and Add Form -->
+    <div class="overlay" id="overlay"></div>
+    <div class="add-form" id="addForm">
+      <div class="form-grid">
+        <select id="itemCategory" required>
+          <option value="">Select Category</option>
+          <option value="case">Mobile Case</option>
+          <option value="screen">Screen Guard</option>
+          <option value="cable">Data Cable</option>
+          <option value="earphone">Earphone</option>
+        </select>
+        <input type="text" id="itemModel" placeholder="Model (e.g., iPhone 14 Pro)" required />
+        <input type="text" id="itemLocation" placeholder="Location" required />
+        <input type="text" id="itemShelf" placeholder="Shelf" required />
+        <input type="number" id="itemQuantity" placeholder="Quantity" required min="0" />
+      </div>
+      <div class="form-actions">
+        <button class="cancel-button" onclick="toggleAddForm()">Cancel</button>
+        <button class="save-button" onclick="addAccessory()">Save Item</button>
+      </div>
+    </div>
+
+    <!-- Main Categories Grid -->
+    <div class="categories-grid" id="categoriesGrid"></div>
+
+    <!-- Detailed Category Views -->
+    <div id="casesSection" style="display: none;">
+      <h1>Mobile Cases</h1>
+      <div class="category-search" id="caseSearchContainer">
+        <input type="text" id="caseSearch" placeholder="Search Mobile Cases..." />
+      </div>
+      <div class="categories-grid" id="casesGrid"></div>
+      <button onclick="showMainView()">Back to Main</button>
+    </div>
+
+    <div id="screenSection" style="display: none;">
+      <h1>Screen Guards</h1>
+      <div class="category-search" id="screenSearchContainer">
+        <input type="text" id="screenSearch" placeholder="Search Screen Guards..." />
+      </div>
+      <div class="categories-grid" id="screenGrid"></div>
+      <button onclick="showMainView()">Back to Main</button>
+    </div>
+
+    <div id="cableSection" style="display: none;">
+      <h1>Data Cables</h1>
+      <div class="category-search" id="cableSearchContainer">
+        <input type="text" id="cableSearch" placeholder="Search Data Cables..." />
+      </div>
+      <div class="categories-grid" id="cableGrid"></div>
+      <button onclick="showMainView()">Back to Main</button>
+    </div>
+
+    <div id="earphoneSection" style="display: none;">
+      <h1>Earphones</h1>
+      <div class="category-search" id="earphoneSearchContainer">
+        <input type="text" id="earphoneSearch" placeholder="Search Earphones..." />
+      </div>
+      <div class="categories-grid" id="earphoneGrid"></div>
+      <button onclick="showMainView()">Back to Main</button>
+    </div>
+  </div>
+
+  <script>
+    const categories = {
+      case: { name: 'Mobile Cases', icon: '📱', keywords: ['case', 'mobile case', 'cover'] },
+      screen: { name: 'Screen Guards', icon: '🛡️', keywords: ['screen', 'guard', 'screen guard', 'protector'] },
+      cable: { name: 'Data Cables', icon: '🔌', keywords: ['cable', 'data cable', 'charger', 'usb'] },
+      earphone: { name: 'Earphones', icon: '🎧', keywords: ['earphone', 'headphone', 'earbud'] }
+    };
+
+    let globalSearchTerm = '';
+    let categorySearchTerms = {
+      case: '',
+      screen: '',
+      cable: '',
+      earphone: ''
+    };
+    let expandedCategories = {
+      case: false,
+      screen: false,
+      cable: false,
+      earphone: false
+    };
+    let accessories = JSON.parse(localStorage.getItem('accessories')) || [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCategories();
+      setupSearchEventListeners();
+    });
+
+    function saveAccessories() {
+      localStorage.setItem('accessories', JSON.stringify(accessories));
+    }
+
+    // Debounce helper to reduce excessive calls during searching
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+      };
+    }
+
+    // Determines which category best matches the search term based on defined keywords.
+    // Returns a matched category or null if none is found.
+    function determineCategory(searchTerm) {
+      const lowerSearch = searchTerm.toLowerCase();
+      for (const [category, { keywords }] of Object.entries(categories)) {
+        if (keywords.some(keyword => lowerSearch.includes(keyword))) {
+          return category;
+        }
+      }
+      return null; // No match found; show all categories
+    }
+
+    // Render function that displays categories. When a global search is active,
+    // it shows only the matching category if one is found. Otherwise, it shows all.
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = '';
+
+      // Determine active category based on global search; might be null if no match is found.
+      let activeCategory = globalSearchTerm ? determineCategory(globalSearchTerm) : null;
+      console.log("Global Search:", globalSearchTerm, "Active Category:", activeCategory);
+
+      Object.entries(categories).forEach(([category, { name, icon }]) => {
+        // When a global search is active and we found a match, skip categories that are not the active one.
+        if (globalSearchTerm && activeCategory !== null && category !== activeCategory) {
+          return;
+        }
+
+        // Filter accessories by category
+        let categoryItems = accessories.filter(item => item.category === category);
+        const searchTerm = globalSearchTerm || categorySearchTerms[category];
+        if (searchTerm) {
+          categoryItems = categoryItems.filter(item =>
+            item.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.location.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+          expandedCategories[category] = true;
+        }
+
+        const section = document.createElement('div');
+        section.className = 'category-section';
+        section.innerHTML = `
+          <div class="category-header" onclick="toggleCategory('${category}')">
+            <div class="category-header-content">
+              <span>${icon}</span>
+              <h3>${name}</h3>
+            </div>
+          </div>
+          <div class="category-search ${expandedCategories[category] ? 'visible' : ''}">
+            <input type="text" class="category-search-input" data-category="${category}" placeholder="Search ${name.toLowerCase()}..." value="${categorySearchTerms[category]}">
+          </div>
+          <div class="category-items ${expandedCategories[category] ? 'visible' : ''}">
+            ${categoryItems.length > 0 ? categoryItems.map(item => `
+              <div class="accessory-card">
+                <div class="accessory-info">
+                  <div class="accessory-details">
+                    <h4>${item.model}</h4>
+                    <div class="accessory-location">
+                      <span>📍</span>
+                      <span>${item.location} - Shelf ${item.shelf}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="accessory-actions">
+                  <span>Qty: ${item.quantity}</span>
+                  <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+                </div>
+              </div>
+            `).join('') : `<div class="empty-category">No ${name.toLowerCase()} found</div>`}
+          </div>
+        `;
+        grid.appendChild(section);
+      });
+
+      document.querySelectorAll('.category-search-input').forEach(input => {
+        input.addEventListener('input', debounce(handleSearchInput, 300));
+      });
+    }
+
+    // Toggle the visibility of a single category section (only when no global search is active)
+    function toggleCategory(category) {
+      if (!globalSearchTerm) {
+        expandedCategories[category] = !expandedCategories[category];
+        renderCategories();
+      }
+    }
+
+    // Show detailed views based on category selection (if needed)
+    function showCategory(category) {
+      document.getElementById('categoriesGrid').style.display = 'none';
+      document.getElementById('casesSection').style.display = 'none';
+      document.getElementById('screenSection').style.display = 'none';
+      document.getElementById('cableSection').style.display = 'none';
+      document.getElementById('earphoneSection').style.display = 'none';
+
+      if (category === 'case') {
+        document.getElementById('casesSection').style.display = 'block';
+        renderMobileCases();
+      } else if (category === 'screen') {
+        document.getElementById('screenSection').style.display = 'block';
+        renderScreenGuards();
+      } else if (category === 'cable') {
+        document.getElementById('cableSection').style.display = 'block';
+        renderDataCables();
+      } else if (category === 'earphone') {
+        document.getElementById('earphoneSection').style.display = 'block';
+        renderEarphones();
+      }
+    }
+
+    function showMainView() {
+      document.getElementById('casesSection').style.display = 'none';
+      document.getElementById('screenSection').style.display = 'none';
+      document.getElementById('cableSection').style.display = 'none';
+      document.getElementById('earphoneSection').style.display = 'none';
+      document.getElementById('categoriesGrid').style.display = 'grid';
+      renderCategories();
+    }
+
+    // Toggle add item form visibility
+    function toggleAddForm() {
+      const form = document.getElementById('addForm');
+      form.classList.toggle('visible');
+      const overlay = document.getElementById('overlay');
+      overlay.classList.toggle('visible');
+      if (!form.classList.contains('visible')) clearForm();
+    }
+
+    // Clear form fields after save or cancel
+    function clearForm() {
+      document.getElementById('itemCategory').value = '';
+      document.getElementById('itemModel').value = '';
+      document.getElementById('itemLocation').value = '';
+      document.getElementById('itemShelf').value = '';
+      document.getElementById('itemQuantity').value = '';
+    }
+
+    // Add accessory to local storage and update view
+    function addAccessory() {
+      const category = document.getElementById('itemCategory').value;
+      const model = document.getElementById('itemModel').value;
+      const location = document.getElementById('itemLocation').value;
+      const shelf = document.getElementById('itemShelf').value;
+      const quantity = parseInt(document.getElementById('itemQuantity').value) || 0;
+
+      if (category && model && location && shelf) {
+        const newAccessory = { id: Date.now().toString(), category, model, location, shelf, quantity };
+        accessories.push(newAccessory);
+        saveAccessories();
+        if (!globalSearchTerm) {
+          expandedCategories[category] = true;
+        }
+        renderCategories();
+        toggleAddForm();
+      }
+    }
+
+    // Delete accessory and update view
+    function deleteAccessory(id) {
+      accessories = accessories.filter(item => item.id !== id);
+      saveAccessories();
+      renderCategories();
+      renderMobileCases();
+      renderScreenGuards();
+      renderDataCables();
+      renderEarphones();
+    }
+
+    // Update the global search term and re-render categories
+    function handleGlobalSearch(searchTerm) {
+      globalSearchTerm = searchTerm;
+      // Collapse all categories initially
+      Object.keys(expandedCategories).forEach(key => {
+        expandedCategories[key] = false;
+      });
+      if (searchTerm) {
+        const activeCategory = determineCategory(searchTerm);
+        if (activeCategory !== null) {
+          expandedCategories[activeCategory] = true;
+        }
+      }
+      renderCategories();
+    }
+
+    // Handle category-specific search input changes
+    function handleSearchInput(e) {
+      const category = e.target.dataset.category;
+      if (!globalSearchTerm) {
+        categorySearchTerms[category] = e.target.value;
+        renderCategories();
+      }
+    }
+
+    // Setup event listeners for all search inputs with debouncing
+    function setupSearchEventListeners() {
+      document.getElementById('globalSearch').addEventListener('input', debounce((e) => {
+        handleGlobalSearch(e.target.value);
+      }, 300));
+
+      document.getElementById('caseSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.case = e.target.value;
+        renderMobileCases();
+      }, 300));
+
+      document.getElementById('screenSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.screen = e.target.value;
+        renderScreenGuards();
+      }, 300));
+
+      document.getElementById('cableSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.cable = e.target.value;
+        renderDataCables();
+      }, 300));
+
+      document.getElementById('earphoneSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.earphone = e.target.value;
+        renderEarphones();
+      }, 300));
+    }
+
+    // Render functions for detailed category views
+    function renderMobileCases() {
+      const casesGrid = document.getElementById('casesGrid');
+      casesGrid.innerHTML = '';
+      let mobileCases = accessories.filter(accessory => accessory.category === 'case');
+      const searchTerm = categorySearchTerms.case.toLowerCase();
+
+      if (searchTerm) {
+        mobileCases = mobileCases.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (mobileCases.length > 0) {
+        mobileCases.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          casesGrid.appendChild(card);
+        });
+      } else {
+        casesGrid.innerHTML = '<div class="empty-category">No mobile cases found</div>';
+      }
+    }
+
+    function renderScreenGuards() {
+      const screenGrid = document.getElementById('screenGrid');
+      screenGrid.innerHTML = '';
+      let screenGuards = accessories.filter(accessory => accessory.category === 'screen');
+      const searchTerm = categorySearchTerms.screen.toLowerCase();
+
+      if (searchTerm) {
+        screenGuards = screenGuards.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (screenGuards.length > 0) {
+        screenGuards.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          screenGrid.appendChild(card);
+        });
+      } else {
+        screenGrid.innerHTML = '<div class="empty-category">No screen guards found</div>';
+      }
+    }
+
+    function renderDataCables() {
+      const cableGrid = document.getElementById('cableGrid');
+      cableGrid.innerHTML = '';
+      let dataCables = accessories.filter(accessory => accessory.category === 'cable');
+      const searchTerm = categorySearchTerms.cable.toLowerCase();
+
+      if (searchTerm) {
+        dataCables = dataCables.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (dataCables.length > 0) {
+        dataCables.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          cableGrid.appendChild(card);
+        });
+      } else {
+        cableGrid.innerHTML = '<div class="empty-category">No data cables found</div>';
+      }
+    }
+
+    function renderEarphones() {
+      const earphoneGrid = document.getElementById('earphoneGrid');
+      earphoneGrid.innerHTML = '';
+      let earphones = accessories.filter(accessory => accessory.category === 'earphone');
+      const searchTerm = categorySearchTerms.earphone.toLowerCase();
+
+      if (searchTerm) {
+        earphones = earphones.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (earphones.length > 0) {
+        earphones.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          earphoneGrid.appendChild(card);
+        });
+      } else {
+        earphoneGrid.innerHTML = '<div class="empty-category">No earphones found</div>';
+      }
+    }
+  </script>
+</body>
+</html>
