@@ -129,7 +129,8 @@
       background-color: rgb(37, 99, 235);
     }
 
-    .add-form {
+    .add-form,
+    .delete-form {
       background: white;
       border-radius: 8px;
       padding: 24px;
@@ -157,6 +158,7 @@
     }
 
     .add-form.visible,
+    .delete-form.visible,
     .overlay.visible {
       display: block;
     }
@@ -394,6 +396,19 @@
       </div>
     </div>
 
+    <!-- Overlay and Quantity Delete Form -->
+    <div class="overlay" id="deleteOverlay"></div>
+    <div class="delete-form" id="deleteForm">
+      <h2>Delete Accessory Quantity</h2>
+      <div class="form-grid">
+        <input type="number" id="deleteQuantity" placeholder="Quantity to Delete" required min="1" />
+      </div>
+      <div class="form-actions">
+        <button class="cancel-button" onclick="toggleDeleteForm()">Cancel</button>
+        <button class="save-button" onclick="deleteAccessoryQuantity()">Delete Item</button>
+      </div>
+    </div>
+
     <!-- Main Categories Grid -->
     <div class="categories-grid" id="categoriesGrid"></div>
 
@@ -457,6 +472,8 @@
       earphone: false
     };
     let accessories = JSON.parse(localStorage.getItem('accessories')) || [];
+    let currentAccessoryId;
+    let currentAccessory = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       renderCategories();
@@ -488,23 +505,19 @@
       return null; // No match found; show all categories
     }
 
-    // Render function that displays categories. When a global search is active,
-    // it shows only the matching category if one is found. Otherwise, it shows all.
+    // Render function that displays categories.
     function renderCategories() {
       const grid = document.getElementById('categoriesGrid');
       grid.innerHTML = '';
 
       // Determine active category based on global search; might be null if no match is found.
       let activeCategory = globalSearchTerm ? determineCategory(globalSearchTerm) : null;
-      console.log("Global Search:", globalSearchTerm, "Active Category:", activeCategory);
 
       Object.entries(categories).forEach(([category, { name, icon }]) => {
-        // When a global search is active and we found a match, skip categories that are not the active one.
         if (globalSearchTerm && activeCategory !== null && category !== activeCategory) {
           return;
         }
 
-        // Filter accessories by category
         let categoryItems = accessories.filter(item => item.category === category);
         const searchTerm = globalSearchTerm || categorySearchTerms[category];
         if (searchTerm) {
@@ -555,7 +568,7 @@
       });
     }
 
-    // Toggle the visibility of a single category section (only when no global search is active)
+    // Toggle the visibility of a single category section
     function toggleCategory(category) {
       if (!globalSearchTerm) {
         expandedCategories[category] = !expandedCategories[category];
@@ -604,13 +617,27 @@
       if (!form.classList.contains('visible')) clearForm();
     }
 
-    // Clear form fields after save or cancel
+    // Toggle delete item form visibility
+    function toggleDeleteForm() {
+      const form = document.getElementById('deleteForm');
+      form.classList.toggle('visible');
+      const overlay = document.getElementById('deleteOverlay');
+      overlay.classList.toggle('visible');
+      if (!form.classList.contains('visible')) clearDeleteForm();
+    }
+
+    // Clear add form fields after save or cancel
     function clearForm() {
       document.getElementById('itemCategory').value = '';
       document.getElementById('itemModel').value = '';
       document.getElementById('itemLocation').value = '';
       document.getElementById('itemShelf').value = '';
       document.getElementById('itemQuantity').value = '';
+    }
+
+    // Clear delete form fields
+    function clearDeleteForm() {
+      document.getElementById('deleteQuantity').value = '';
     }
 
     // Add accessory to local storage and update view
@@ -633,21 +660,33 @@
       }
     }
 
-    // Delete accessory and update view
+    // Show delete quantity form and get current accessory data
     function deleteAccessory(id) {
-      accessories = accessories.filter(item => item.id !== id);
-      saveAccessories();
-      renderCategories();
-      renderMobileCases();
-      renderScreenGuards();
-      renderDataCables();
-      renderEarphones();
+      currentAccessoryId = id;
+      currentAccessory = accessories.find(item => item.id === id);
+      toggleDeleteForm();
+    }
+
+    // Delete specified quantity of an accessory
+    function deleteAccessoryQuantity() {
+      const quantityToDelete = parseInt(document.getElementById('deleteQuantity').value) || 0;
+
+      if (currentAccessory) {
+        if (quantityToDelete >= currentAccessory.quantity) {
+          accessories = accessories.filter(item => item.id !== currentAccessoryId);
+        } else {
+          currentAccessory.quantity -= quantityToDelete;
+        }
+
+        saveAccessories();
+        renderCategories();
+        toggleDeleteForm();
+      }
     }
 
     // Update the global search term and re-render categories
     function handleGlobalSearch(searchTerm) {
       globalSearchTerm = searchTerm;
-      // Collapse all categories initially
       Object.keys(expandedCategories).forEach(key => {
         expandedCategories[key] = false;
       });
