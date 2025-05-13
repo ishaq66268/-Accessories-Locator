@@ -364,7 +364,7 @@
     <!-- Global Search Container -->
     <div class="search-container">
       <div class="search-box">
-        <input type="text" id="globalSearch" placeholder="Search accessories (e.g., case, screen, cable, earphone)..." />
+        <input type="text" id="globalSearch" placeholder="Search accessories (e.g., case, screen, cable, battery)..." />
       </div>
     </div>
 
@@ -384,6 +384,12 @@
           <option value="screen">Screen Guard</option>
           <option value="cable">Data Cable</option>
           <option value="earphone">Earphone</option>
+          <option value="combo">Combo</option>
+          <option value="connector">Connector</option>
+          <option value="mic">Mic</option>
+          <option value="ccboard">CC Board</option>
+          <option value="flippouch">Flip Pouch Case</option>
+          <option value="battery">Battery</option>
         </select>
         <input type="text" id="itemModel" placeholder="Model (e.g., iPhone 14 Pro)" required />
         <input type="text" id="itemLocation" placeholder="Location" required />
@@ -419,7 +425,6 @@
         <input type="text" id="caseSearch" placeholder="Search Mobile Cases..." />
       </div>
       <div class="categories-grid" id="casesGrid"></div>
-      <button onclick="showMainView()">Back to Main</button>
     </div>
 
     <div id="screenSection" style="display: none;">
@@ -428,7 +433,6 @@
         <input type="text" id="screenSearch" placeholder="Search Screen Guards..." />
       </div>
       <div class="categories-grid" id="screenGrid"></div>
-      <button onclick="showMainView()">Back to Main</button>
     </div>
 
     <div id="cableSection" style="display: none;">
@@ -437,7 +441,6 @@
         <input type="text" id="cableSearch" placeholder="Search Data Cables..." />
       </div>
       <div class="categories-grid" id="cableGrid"></div>
-      <button onclick="showMainView()">Back to Main</button>
     </div>
 
     <div id="earphoneSection" style="display: none;">
@@ -446,7 +449,54 @@
         <input type="text" id="earphoneSearch" placeholder="Search Earphones..." />
       </div>
       <div class="categories-grid" id="earphoneGrid"></div>
-      <button onclick="showMainView()">Back to Main</button>
+    </div>
+
+    <div id="comboSection" style="display: none;">
+      <h1>Combos</h1>
+      <div class="category-search" id="comboSearchContainer">
+        <input type="text" id="comboSearch" placeholder="Search Combos..." />
+      </div>
+      <div class="categories-grid" id="comboGrid"></div>
+    </div>
+
+    <div id="connectorSection" style="display: none;">
+      <h1>Connectors</h1>
+      <div class="category-search" id="connectorSearchContainer">
+        <input type="text" id="connectorSearch" placeholder="Search Connectors..." />
+      </div>
+      <div class="categories-grid" id="connectorGrid"></div>
+    </div>
+
+    <div id="micSection" style="display: none;">
+      <h1>Mics</h1>
+      <div class="category-search" id="micSearchContainer">
+        <input type="text" id="micSearch" placeholder="Search Mics..." />
+      </div>
+      <div class="categories-grid" id="micGrid"></div>
+    </div>
+
+    <div id="ccboardSection" style="display: none;">
+      <h1>CC Boards</h1>
+      <div class="category-search" id="ccboardSearchContainer">
+        <input type="text" id="ccboardSearch" placeholder="Search CC Boards..." />
+      </div>
+      <div class="categories-grid" id="ccboardGrid"></div>
+    </div>
+
+    <div id="flippouchSection" style="display: none;">
+      <h1>Flip Pouch Cases</h1>
+      <div class="category-search" id="flippouchSearchContainer">
+        <input type="text" id="flippouchSearch" placeholder="Search Flip Pouch Cases..." />
+      </div>
+      <div class="categories-grid" id="flippouchGrid"></div>
+    </div>
+
+    <div id="batterySection" style="display: none;">
+      <h1>Batteries</h1>
+      <div class="category-search" id="batterySearchContainer">
+        <input type="text" id="batterySearch" placeholder="Search Batteries..." />
+      </div>
+      <div class="categories-grid" id="batteryGrid"></div>
     </div>
   </div>
 
@@ -455,7 +505,13 @@
       case: { name: 'Mobile Cases', icon: '📱', keywords: ['case', 'mobile case', 'cover'] },
       screen: { name: 'Screen Guards', icon: '🛡️', keywords: ['screen', 'guard', 'screen guard', 'protector'] },
       cable: { name: 'Data Cables', icon: '🔌', keywords: ['cable', 'data cable', 'charger', 'usb'] },
-      earphone: { name: 'Earphones', icon: '🎧', keywords: ['earphone', 'headphone', 'earbud'] }
+      earphone: { name: 'Earphones', icon: '🎧', keywords: ['earphone', 'headphone', 'earbud'] },
+      combo: { name: 'Combos', icon: '📦', keywords: ['combo', 'bundle', 'package'] },
+      connector: { name: 'Connectors', icon: '🔗', keywords: ['connector', 'adapter', 'plug'] },
+      mic: { name: 'Mics', icon: '🎤', keywords: ['mic', 'microphone'] },
+      ccboard: { name: 'CC Boards', icon: '🔧', keywords: ['cc board', 'circuit board', 'charging board'] },
+      flippouch: { name: 'Flip Pouch Cases', icon: '📔', keywords: ['flip pouch', 'pouch case', 'flip case'] },
+      battery: { name: 'Batteries', icon: '🔋', keywords: ['battery', 'power', 'cell'] }
     };
 
     let globalSearchTerm = '';
@@ -463,13 +519,25 @@
       case: '',
       screen: '',
       cable: '',
-      earphone: ''
+      earphone: '',
+      combo: '',
+      connector: '',
+      mic: '',
+      ccboard: '',
+      flippouch: '',
+      battery: ''
     };
     let expandedCategories = {
       case: false,
       screen: false,
       cable: false,
-      earphone: false
+      earphone: false,
+      combo: false,
+      connector: false,
+      mic: false,
+      ccboard: false,
+      flippouch: false,
+      battery: false
     };
     let accessories = JSON.parse(localStorage.getItem('accessories')) || [];
     let currentAccessoryId;
@@ -576,13 +644,19 @@
       }
     }
 
-    // Show detailed views based on category selection (if needed)
+    // Show detailed views based on category selection
     function showCategory(category) {
       document.getElementById('categoriesGrid').style.display = 'none';
       document.getElementById('casesSection').style.display = 'none';
       document.getElementById('screenSection').style.display = 'none';
       document.getElementById('cableSection').style.display = 'none';
       document.getElementById('earphoneSection').style.display = 'none';
+      document.getElementById('comboSection').style.display = 'none';
+      document.getElementById('connectorSection').style.display = 'none';
+      document.getElementById('micSection').style.display = 'none';
+      document.getElementById('ccboardSection').style.display = 'none';
+      document.getElementById('flippouchSection').style.display = 'none';
+      document.getElementById('batterySection').style.display = 'none';
 
       if (category === 'case') {
         document.getElementById('casesSection').style.display = 'block';
@@ -596,16 +670,25 @@
       } else if (category === 'earphone') {
         document.getElementById('earphoneSection').style.display = 'block';
         renderEarphones();
+      } else if (category === 'combo') {
+        document.getElementById('comboSection').style.display = 'block';
+        renderCombos();
+      } else if (category === 'connector') {
+        document.getElementById('connectorSection').style.display = 'block';
+        renderConnectors();
+      } else if (category === 'mic') {
+        document.getElementById('micSection').style.display = 'block';
+        renderMics();
+      } else if (category === 'ccboard') {
+        document.getElementById('ccboardSection').style.display = 'block';
+        renderCCBoards();
+      } else if (category === 'flippouch') {
+        document.getElementById('flippouchSection').style.display = 'block';
+        renderFlipPouchCases();
+      } else if (category === 'battery') {
+        document.getElementById('batterySection').style.display = 'block';
+        renderBatteries();
       }
-    }
-
-    function showMainView() {
-      document.getElementById('casesSection').style.display = 'none';
-      document.getElementById('screenSection').style.display = 'none';
-      document.getElementById('cableSection').style.display = 'none';
-      document.getElementById('earphoneSection').style.display = 'none';
-      document.getElementById('categoriesGrid').style.display = 'grid';
-      renderCategories();
     }
 
     // Toggle add item form visibility
@@ -732,6 +815,36 @@
       document.getElementById('earphoneSearch').addEventListener('input', debounce((e) => {
         categorySearchTerms.earphone = e.target.value;
         renderEarphones();
+      }, 300));
+
+      document.getElementById('comboSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.combo = e.target.value;
+        renderCombos();
+      }, 300));
+
+      document.getElementById('connectorSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.connector = e.target.value;
+        renderConnectors();
+      }, 300));
+
+      document.getElementById('micSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.mic = e.target.value;
+        renderMics();
+      }, 300));
+
+      document.getElementById('ccboardSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.ccboard = e.target.value;
+        renderCCBoards();
+      }, 300));
+
+      document.getElementById('flippouchSearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.flippouch = e.target.value;
+        renderFlipPouchCases();
+      }, 300));
+
+      document.getElementById('batterySearch').addEventListener('input', debounce((e) => {
+        categorySearchTerms.battery = e.target.value;
+        renderBatteries();
       }, 300));
     }
 
@@ -877,6 +990,222 @@
         });
       } else {
         earphoneGrid.innerHTML = '<div class="empty-category">No earphones found</div>';
+      }
+    }
+
+    function renderCombos() {
+      const comboGrid = document.getElementById('comboGrid');
+      comboGrid.innerHTML = '';
+      let combos = accessories.filter(accessory => accessory.category === 'combo');
+      const searchTerm = categorySearchTerms.combo.toLowerCase();
+
+      if (searchTerm) {
+        combos = combos.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (combos.length > 0) {
+        combos.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          comboGrid.appendChild(card);
+        });
+      } else {
+        comboGrid.innerHTML = '<div class="empty-category">No combos found</div>';
+      }
+    }
+
+    function renderConnectors() {
+      const connectorGrid = document.getElementById('connectorGrid');
+      connectorGrid.innerHTML = '';
+      let connectors = accessories.filter(accessory => accessory.category === 'connector');
+      const searchTerm = categorySearchTerms.connector.toLowerCase();
+
+      if (searchTerm) {
+        connectors = connectors.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (connectors.length > 0) {
+        connectors.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          connectorGrid.appendChild(card);
+        });
+      } else {
+        connectorGrid.innerHTML = '<div class="empty-category">No connectors found</div>';
+      }
+    }
+
+    function renderMics() {
+      const micGrid = document.getElementById('micGrid');
+      micGrid.innerHTML = '';
+      let mics = accessories.filter(accessory => accessory.category === 'mic');
+      const searchTerm = categorySearchTerms.mic.toLowerCase();
+
+      if (searchTerm) {
+        mics = mics.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (mics.length > 0) {
+        mics.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          micGrid.appendChild(card);
+        });
+      } else {
+        micGrid.innerHTML = '<div class="empty-category">No mics found</div>';
+      }
+    }
+
+    function renderCCBoards() {
+      const ccboardGrid = document.getElementById('ccboardGrid');
+      ccboardGrid.innerHTML = '';
+      let ccboards = accessories.filter(accessory => accessory.category === 'ccboard');
+      const searchTerm = categorySearchTerms.ccboard.toLowerCase();
+
+      if (searchTerm) {
+        ccboards = ccboards.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (ccboards.length > 0) {
+        ccboards.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          ccboardGrid.appendChild(card);
+        });
+      } else {
+        ccboardGrid.innerHTML = '<div class="empty-category">No CC boards found</div>';
+      }
+    }
+
+    function renderFlipPouchCases() {
+      const flippouchGrid = document.getElementById('flippouchGrid');
+      flippouchGrid.innerHTML = '';
+      let flipPouchCases = accessories.filter(accessory => accessory.category === 'flippouch');
+      const searchTerm = categorySearchTerms.flippouch.toLowerCase();
+
+      if (searchTerm) {
+        flipPouchCases = flipPouchCases.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (flipPouchCases.length > 0) {
+        flipPouchCases.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          flippouchGrid.appendChild(card);
+        });
+      } else {
+        flippouchGrid.innerHTML = '<div class="empty-category">No flip pouch cases found</div>';
+      }
+    }
+
+    function renderBatteries() {
+      const batteryGrid = document.getElementById('batteryGrid');
+      batteryGrid.innerHTML = '';
+      let batteries = accessories.filter(accessory => accessory.category === 'battery');
+      const searchTerm = categorySearchTerms.battery.toLowerCase();
+
+      if (searchTerm) {
+        batteries = batteries.filter(item =>
+          item.model.toLowerCase().includes(searchTerm) ||
+          item.location.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      if (batteries.length > 0) {
+        batteries.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'accessory-card';
+          card.innerHTML = `
+            <div class="accessory-info">
+              <div class="accessory-details">
+                <h4>${item.model}</h4>
+                <div class="accessory-location">📍 ${item.location} - Shelf ${item.shelf}</div>
+              </div>
+            </div>
+            <div class="accessory-actions">
+              <span>Qty: ${item.quantity}</span>
+              <button class="delete-button" onclick="deleteAccessory('${item.id}')">🗑️</button>
+            </div>
+          `;
+          batteryGrid.appendChild(card);
+        });
+      } else {
+        batteryGrid.innerHTML = '<div class="empty-category">No batteries found</div>';
       }
     }
   </script>
