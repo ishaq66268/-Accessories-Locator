@@ -15,29 +15,29 @@
 
     body {
       min-height: 100vh;
-      background-color: #fef9e7; /* soft yellow base */
+      background-color: #fef9e7;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 16px;
     }
 
     /* ---------- TOP SECTION (yellow) ---------- */
     .top-section {
-      background: #fde047; /* bright yellow */
+      background: #fde047;
       border-radius: 16px 16px 0 0;
-      padding: 24px 24px 16px 24px;
+      padding: 20px 20px 16px 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
 
     header {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
@@ -45,18 +45,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
     }
 
     .logo-text {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
       color: rgb(17, 24, 39);
       text-align: center;
     }
 
     .logo-subtext {
-      font-size: 14px;
+      font-size: 13px;
       color: rgb(75, 85, 99);
       text-align: center;
     }
@@ -64,19 +64,21 @@
     .header-content {
       text-align: center;
       flex: 1;
+      min-width: 120px;
     }
 
     .header-title {
-      font-size: 30px;
+      font-size: 26px;
       color: rgb(17, 24, 39);
-      margin-top: 8px;
+      margin-top: 4px;
+      line-height: 1.2;
     }
 
     .search-container {
       background: transparent;
       border-radius: 8px;
-      padding: 8px 0 16px 0;
-      margin-bottom: 8px;
+      padding: 4px 0 12px 0;
+      margin-bottom: 4px;
     }
 
     .search-box {
@@ -92,6 +94,7 @@
       outline: none;
       transition: all 0.2s;
       background: white;
+      -webkit-appearance: none;
     }
 
     .search-box input:focus {
@@ -115,24 +118,26 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       padding-top: 4px;
     }
 
     .controls h2 {
-      font-size: 20px;
+      font-size: 18px;
       color: rgb(31, 41, 55);
     }
 
     .add-button {
       background-color: rgb(59, 130, 246);
       color: white;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.2s;
       font-weight: 500;
+      font-size: 14px;
+      white-space: nowrap;
     }
 
     .add-button:hover {
@@ -143,11 +148,11 @@
     .bottom-section {
       background: white;
       border-radius: 0 0 16px 16px;
-      padding: 24px 24px 32px 24px;
+      padding: 20px 20px 28px 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
-    /* forms & overlays – keep white for contrast */
+    /* forms & overlays */
     .add-form,
     .delete-form,
     .edit-form {
@@ -160,9 +165,11 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 90%;
+      width: 92%;
       max-width: 500px;
       z-index: 1000;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .overlay {
@@ -186,7 +193,7 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 14px;
       margin-bottom: 16px;
     }
 
@@ -198,12 +205,14 @@
       font-size: 16px;
       width: 100%;
       background: white;
+      -webkit-appearance: none;
     }
 
     .form-actions {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .cancel-button {
@@ -213,6 +222,7 @@
       color: rgb(75, 85, 99);
       cursor: pointer;
       font-weight: 500;
+      font-size: 14px;
     }
 
     .save-button {
@@ -223,6 +233,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: 500;
+      font-size: 14px;
       transition: background-color 0.2s;
     }
 
@@ -230,11 +241,11 @@
       background-color: rgb(22, 163, 74);
     }
 
-    /* categories grid inside white section */
+    /* categories grid */
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .category-section {
@@ -246,32 +257,33 @@
 
     .category-header {
       background-color: rgb(243, 244, 246);
-      padding: 16px;
+      padding: 14px 16px;
       border-bottom: 1px solid rgb(229, 231, 235);
       cursor: pointer;
       transition: transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .category-header:hover {
-      transform: scale(1.02);
+    .category-header:active {
+      transform: scale(0.98);
     }
 
     .category-header-content {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .category-header h3 {
-      font-size: 18px;
+      font-size: 17px;
       color: rgb(31, 41, 55);
       margin: 0;
     }
 
     .category-search {
       display: none;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .category-search.visible {
@@ -285,13 +297,14 @@
       border-radius: 6px;
       font-size: 14px;
       background: white;
+      -webkit-appearance: none;
     }
 
     .category-items {
-      padding: 16px;
+      padding: 14px;
       display: none;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .category-items.visible {
@@ -302,57 +315,68 @@
       background: white;
       border: 1px solid rgb(229, 231, 235);
       border-radius: 8px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    .accessory-card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    .accessory-card:active {
+      transform: scale(0.99);
     }
 
     .accessory-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex: 1;
+      min-width: 120px;
     }
 
     .accessory-details h4 {
       color: rgb(31, 41, 55);
       margin-bottom: 2px;
-      font-size: 16px;
+      font-size: 15px;
+      word-break: break-word;
     }
 
     .accessory-location {
       color: rgb(75, 85, 99);
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       align-items: center;
       gap: 4px;
+      flex-wrap: wrap;
     }
 
     .accessory-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .accessory-actions span {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgb(31, 41, 55);
     }
 
     .accessory-actions button {
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 18px;
-      padding: 4px;
+      font-size: 17px;
+      padding: 4px 6px;
       transition: transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .accessory-actions button:hover {
-      transform: scale(1.15);
+    .accessory-actions button:active {
+      transform: scale(0.9);
     }
 
     .edit-button {
@@ -366,28 +390,195 @@
     .empty-category {
       text-align: center;
       color: rgb(107, 114, 128);
-      padding: 24px;
+      padding: 20px;
+      font-size: 14px;
     }
 
-    @media (max-width: 640px) {
+    /* ---------- MOBILE RESPONSIVE ---------- */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      .top-section {
+        padding: 16px 16px 12px 16px;
+        border-radius: 12px 12px 0 0;
+      }
+
+      .bottom-section {
+        padding: 16px 16px 20px 16px;
+        border-radius: 0 0 12px 12px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+
+      .logo-text {
+        font-size: 20px;
+      }
+
+      .header-title {
+        font-size: 22px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .controls h2 {
+        text-align: center;
+        font-size: 17px;
+      }
+
+      .add-button {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+        font-size: 15px;
+      }
+
       .categories-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
       }
+
       .accessory-card {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        padding: 12px;
       }
-      .header-content {
-        text-align: center;
-        width: 100%;
+
+      .accessory-info {
+        min-width: unset;
       }
-      .logo {
+
+      .accessory-actions {
+        justify-content: flex-end;
+        margin-top: 4px;
+        border-top: 1px solid rgb(243, 244, 246);
+        padding-top: 8px;
+      }
+
+      .accessory-actions span {
+        margin-right: auto;
+      }
+
+      .add-form,
+      .delete-form,
+      .edit-form {
+        width: 95%;
+        padding: 20px;
+        max-height: 85vh;
+      }
+
+      .form-grid {
+        gap: 12px;
+      }
+
+      .form-grid select,
+      .form-grid input {
+        font-size: 15px;
+        padding: 10px 12px;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+
+      .form-actions button {
         width: 100%;
         justify-content: center;
+        padding: 12px;
+        font-size: 16px;
       }
-      .top-section, .bottom-section {
-        padding-left: 16px;
-        padding-right: 16px;
+
+      .cancel-button {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 6px;
+      }
+
+      .top-section {
+        padding: 12px 12px 10px 12px;
+      }
+
+      .bottom-section {
+        padding: 12px 12px 16px 12px;
+      }
+
+      .header-title {
+        font-size: 19px;
+      }
+
+      .logo-text {
+        font-size: 18px;
+      }
+
+      .logo-subtext {
+        font-size: 11px;
+      }
+
+      .search-box input {
+        font-size: 15px;
+        padding: 10px 14px 10px 38px;
+      }
+
+      .search-box::before {
+        font-size: 16px;
+        left: 12px;
+      }
+
+      .category-header {
+        padding: 12px 14px;
+      }
+
+      .category-header h3 {
+        font-size: 15px;
+      }
+
+      .category-items {
+        padding: 10px;
+        gap: 8px;
+      }
+
+      .accessory-card {
+        padding: 10px 12px;
+      }
+
+      .accessory-details h4 {
+        font-size: 14px;
+      }
+
+      .accessory-location {
+        font-size: 12px;
+      }
+
+      .accessory-actions button {
+        font-size: 16px;
+        padding: 6px 8px;
+      }
+
+      .add-form,
+      .delete-form,
+      .edit-form {
+        padding: 16px;
+        width: 98%;
+      }
+
+      .form-grid select,
+      .form-grid input {
+        font-size: 14px;
+        padding: 8px 10px;
       }
     }
   </style>
@@ -408,7 +599,7 @@
 
     <div class="search-container">
       <div class="search-box">
-        <input type="text" id="globalSearch" placeholder="Search accessories (e.g., case, screen, cable, battery)..." />
+        <input type="text" id="globalSearch" placeholder="Search accessories..." />
       </div>
     </div>
 
@@ -420,7 +611,6 @@
 
   <!-- BOTTOM: white -->
   <div class="bottom-section">
-    <!-- categories grid lives here -->
     <div class="categories-grid" id="categoriesGrid"></div>
   </div>
 </div>
@@ -456,20 +646,20 @@
 <!-- Overlay & Delete Form -->
 <div class="overlay" id="deleteOverlay"></div>
 <div class="delete-form" id="deleteForm">
-  <h2 style="margin-bottom:12px;">Delete Accessory Quantity</h2>
+  <h2 style="margin-bottom:12px;font-size:20px;">Delete Quantity</h2>
   <div class="form-grid">
     <input type="number" id="deleteQuantity" placeholder="Quantity to Delete" required min="1" />
   </div>
   <div class="form-actions">
     <button class="cancel-button" onclick="toggleDeleteForm()">Cancel</button>
-    <button class="save-button" onclick="deleteAccessoryQuantity()">Delete Item</button>
+    <button class="save-button" onclick="deleteAccessoryQuantity()">Delete</button>
   </div>
 </div>
 
 <!-- Overlay & Edit Form -->
 <div class="overlay" id="editOverlay"></div>
 <div class="edit-form" id="editForm">
-  <h2 style="margin-bottom:12px;">Edit Accessory</h2>
+  <h2 style="margin-bottom:12px;font-size:20px;">Edit Accessory</h2>
   <div class="form-grid">
     <select id="editCategory" required>
       <option value="">Select Category</option>
@@ -491,7 +681,7 @@
   </div>
   <div class="form-actions">
     <button class="cancel-button" onclick="toggleEditForm()">Cancel</button>
-    <button class="save-button" onclick="saveEditAccessory()">Update Item</button>
+    <button class="save-button" onclick="saveEditAccessory()">Update</button>
   </div>
 </div>
 
